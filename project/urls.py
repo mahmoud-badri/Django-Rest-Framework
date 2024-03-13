@@ -22,12 +22,9 @@ from .settings import *
 urlpatterns = [
     
     path('admin/', admin.site.urls),
-<<<<<<< HEAD
-    path('hotel/', include('hotel.urls'))
-]+ static(MEDIA_URL,document_root=MEDIA_ROOT)
-=======
     path('hotel/', include('hotel.urls')),
     path('appoint/', include('appointments.urls')),
 
-]
->>>>>>> appointment
+]+ static(MEDIA_URL,document_root=MEDIA_ROOT)
+
+    
