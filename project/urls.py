@@ -30,6 +30,7 @@ urlpatterns = [
     path('user/', include(router.urls)),
     path('hotel/', include('hotel.urls')),
     path('appoint/', include('appointments.urls')),
+    path('api/', include('ratings.urls')), 
 
 ]+ static(MEDIA_URL,document_root=MEDIA_ROOT)
 
