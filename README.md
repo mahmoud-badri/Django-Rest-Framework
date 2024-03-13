@@ -1,1 +1,1 @@
-# Django-Rest-Framework
+# django-auth
