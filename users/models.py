@@ -33,8 +33,8 @@ def validate_egyptian_phone(value):
 class User(AbstractUser):
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True, validators=[EmailValidator(), validate_email_format])
-    password = models.CharField(max_length=255, validators=[MinLengthValidator(8), validate_password_complexity])
     phone_number = models.CharField(max_length=11, validators=[validate_egyptian_phone])
+    password = models.CharField(max_length=255, validators=[MinLengthValidator(8), validate_password_complexity])
     username = None
 
     USERNAME_FIELD = 'email'
