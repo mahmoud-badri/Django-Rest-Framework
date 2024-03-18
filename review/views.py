@@ -15,7 +15,7 @@ def create_review(request,pk):
     data = request.data
     review = hotel.reviews.filter(user=user)
    
-    if data['rating'] <= 0 or data['rating'] > 10:
+    if data['rating'] <= 0 or data['rating'] >= 5:
         return Response({"error":'Please select between 1 to 5 only'}
                         ,status=status.HTTP_400_BAD_REQUEST) 
     elif review.exists():
