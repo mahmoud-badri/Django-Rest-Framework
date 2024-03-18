@@ -39,12 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
-    'rest_framework',
     'hotel',
+    'room',
     'appointments',
     'ratings',  
     'corsheaders',
     'review',
+    'rest_framework',
+
 
 
 ]

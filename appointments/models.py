@@ -1,8 +1,8 @@
 from django.db import models
-from hotel.models import *
+from users.models import User
 # Create your models here.
 class Appointment(models.Model):
-    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+    hotel = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     start_day = models.DateField(default='2024-01-01')
     end_day = models.DateField(default='2024-01-05')

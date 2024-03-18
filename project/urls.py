@@ -29,8 +29,9 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('user/', include(router.urls)),
     path('hotel/', include('hotel.urls')),
+    path('room/', include('room.urls')),
     path('appoint/', include('appointments.urls')),
-    path('api/', include('ratings.urls')), 
+    # path('api/', include('ratings.urls')), 
     path('api/', include('users.urls')),
     path('api/', include('review.urls')),
 
