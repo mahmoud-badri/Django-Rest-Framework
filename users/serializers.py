@@ -1,11 +1,12 @@
 from rest_framework import serializers
-from .models import User
-
+from .models import User,image
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'phone_number', 'password']
+
+        fields = ['id', 'name', 'email','phone_number','type', 'password']
+
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -17,3 +18,9 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = image
+        fields = '__all__'
