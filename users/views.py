@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer
-from .models import User
+from .serializers import UserSerializer, ImageSerializer
+from .models import User,image
 import jwt, datetime
 from jwt.exceptions import ExpiredSignatureError, DecodeError
 from rest_framework.exceptions import AuthenticationFailed
@@ -81,3 +81,37 @@ class LogoutView(APIView):
         }
         return response
 
+@api_view(['Get'])
+def ImageList(request,hotel_id):
+    all_images = image.objects.filter(user=hotel_id)
+    image_ser = ImageSerializer(all_images,many=True)
+    return Response(image_ser.data)
+
+@api_view(['Get'])
+def ImageDetail(request,image_id):
+    image = image.objects.get(id = image_id )
+    image_ser = ImageSerializer(image,many=False)
+    return Response(image_ser.data)
+
+@api_view(['POST'])
+def ImageAdd(request):
+    image_ser = ImageSerializer(data=request.data)
+    if image_ser.is_valid():
+        image_ser.save()
+        # return redirect('imageList')
+    return Response(image_ser.data)
+
+
+@api_view(['POST'])
+def ImageEdit(request,image_id):
+    images = image.objects.get(id = image_id )
+    image_ser = ImageSerializer(data=request.data,instance=images)
+    if image_ser.is_valid():
+        image_ser.save()
+        return redirect('ImageList')
+
+@api_view(['DELETE'])
+def ImageDelete(request,image_id):
+    image = image.objects.get(id = image_id )
+    image.delete()
+    return Response('the image deleted successfully')

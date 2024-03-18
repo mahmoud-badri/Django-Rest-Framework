@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import User
-
+from .models import User,image
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,3 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = image
+        fields = '__all__'
