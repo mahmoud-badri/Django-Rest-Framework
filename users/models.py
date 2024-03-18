@@ -33,7 +33,13 @@ def validate_egyptian_phone(value):
 class User(AbstractUser):
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True, validators=[EmailValidator(), validate_email_format])
-    phone_number = models.CharField(max_length=11, validators=[validate_egyptian_phone])
+    phone_number = models.CharField(max_length=11, validators=[validate_egyptian_phone],blank=True,null=True)
+    user_type = [
+        ('user', 'User'),
+        ('hotel', 'Hotel'),
+    ]
+
+    type = models.CharField(max_length=10,choices=user_type,blank=True,null=True)
     password = models.CharField(max_length=255, validators=[MinLengthValidator(8), validate_password_complexity])
     username = None
 
@@ -51,3 +57,9 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         self.full_clean()  # Run full validation before saving
         super().save(*args, **kwargs)
+
+
+
+class image(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    img = models.ImageField(upload_to="hotel", null=False, blank=True)
