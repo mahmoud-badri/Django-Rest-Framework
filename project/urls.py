@@ -33,6 +33,7 @@ urlpatterns = [
     path('appoint/', include('appointments.urls')),
     # path('api/', include('ratings.urls')), 
     path('api/', include('users.urls')),
+    path('api/', include('review.urls')),
 
 ]+ static(MEDIA_URL,document_root=MEDIA_ROOT)
 
