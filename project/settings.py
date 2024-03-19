@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'appointments',
     'ratings',  
     'corsheaders',
+    'review',
     'rest_framework',
 
 
