@@ -1,11 +1,7 @@
 from django.urls import path
-from hotel.views import  *
+from .views import HotelListCreateView, HotelRetrieveUpdateDestroyView
 
 urlpatterns = [
-    path('',HotelList,name='HotelList'),
-    path('<hotel_id>',HotelDetail,name='HotelDetail'),
-    path('add',HotelAdd,name='HotelAdd'),
-    path('`edit`/<hotel_id>',HotelEdit,name='HotelEdit'),
-    path('delete/<hotel_id>',HotelDelete,name='HotelDelete'),
-
+    path('', HotelListCreateView.as_view(), name='hotel-list-create'),
+    path('<int:pk>/', HotelRetrieveUpdateDestroyView.as_view(), name='hotel-retrieve-update-destroy'),
 ]

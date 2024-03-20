@@ -34,12 +34,11 @@ class User(AbstractUser):
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True, validators=[EmailValidator(), validate_email_format])
     phone_number = models.CharField(max_length=11, validators=[validate_egyptian_phone],blank=True,null=True)
-    user_type = [
+    User_Type = (
         ('user', 'User'),
         ('hotel', 'Hotel'),
-    ]
-
-    type = models.CharField(max_length=10,choices=user_type,blank=True,null=True)
+    )
+    type = models.CharField(max_length=10,choices=User_Type, default="user")
     password = models.CharField(max_length=255, validators=[MinLengthValidator(8), validate_password_complexity])
     username = None
 

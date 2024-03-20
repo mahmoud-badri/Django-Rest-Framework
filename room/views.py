@@ -8,13 +8,6 @@ from django.shortcuts import render,reverse,redirect
 
 
 
-#room
-# @api_view(['Get'])
-# def HotelList(request):
-#     all_hotels = User.objects.all()
-#     hotel_ser = UserSerializer(all_hotels,many=True)
-#     return Response(hotel_ser.data)
-    
 @api_view(['Get'])
 def RoomList(request,hotel_id):
     all_rooms = Room.objects.filter(hotel=hotel_id)
