@@ -1,41 +1,19 @@
-from django.shortcuts import render
-from rest_framework import generics
-from .models import Hotel
-from .serializers import  HotelSerializer
-from rest_framework.decorators import api_view
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.response import Response
-from django.shortcuts import render,reverse,redirect
+from .models import Hotel
+from .serializers import HotelSerializer
 
-@api_view(['Get'])
-def HotelList(request):
-    all_hotels = Hotel.objects.all()
-    hotel_ser = HotelSerializer(all_hotels,many=True)
-    return Response(hotel_ser.data)
+class HotelListCreateView(generics.ListCreateAPIView):
+    queryset = Hotel.objects.all()
+    serializer_class = HotelSerializer
 
-@api_view(['Get'])
-def HotelDetail(request,hotel_id):
-    hotel = Hotel.objects.get(id = hotel_id )
-    hotel_ser = HotelSerializer(hotel,many=False)
-    return Response(hotel_ser.data)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-@api_view(['POST'])
-def HotelAdd(request):
-    hotel_ser = HotelSerializer(data=request.data)
-    if hotel_ser.is_valid():
-        hotel_ser.save()
-        return redirect('HotelList')
-
-@api_view(['POST'])
-def HotelEdit(request,hotel_id):
-    hotel = Hotel.objects.get(id = hotel_id )
-    hotel_ser = HotelSerializer(data=request.data,instance=hotel)
-    if hotel_ser.is_valid():
-        hotel_ser.save()
-        return redirect('HotelList')
-
-@api_view(['DELETE'])
-def HotelDelete(request,hotel_id):
-    hotel = Hotel.objects.get(id = hotel_id )
-    hotel.delete()
-    return Response('hotel deleted successfully')
+class HotelRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Hotel.objects.all()
+    serializer_class = HotelSerializer

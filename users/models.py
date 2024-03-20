@@ -40,6 +40,11 @@ class User(AbstractUser):
     ]
 
     # type = models.CharField(max_length=10,choices=user_type,blank=True,null=True)
+
+    User_Type = (
+        ('user', 'User'),
+        ('hotel', 'Hotel'),
+    )
     password = models.CharField(max_length=255, validators=[MinLengthValidator(8), validate_password_complexity])
     username = None
 

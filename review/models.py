@@ -8,8 +8,6 @@ class Review(models.Model):
     rating = models.IntegerField(default=0)
     description = models.TextField(max_length=1000,default="",blank=False) 
     createAt = models.DateTimeField(auto_now_add=True) 
-
-
     # class Meta:
     #     ordering = ('review_date',)
 
