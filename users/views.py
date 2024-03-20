@@ -28,7 +28,7 @@ class LoginView(APIView):
         password = request.data['password']
 
         user = User.objects.filter(email=email).first()
-
+        serializer = UserSerializer(user)
         if user is None:
             raise AuthenticationFailed('User not found!')
 
@@ -48,7 +48,10 @@ class LoginView(APIView):
         response.set_cookie(key='jwt', value=token, httponly=True)
         response.data = {
             'jwt': token
+            
         }
+        response.data['user'] = serializer.data
+    
         return response
 
 

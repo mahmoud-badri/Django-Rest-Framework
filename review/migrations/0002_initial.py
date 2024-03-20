@@ -9,14 +9,14 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('appointments', '0001_initial'),
+        ('review', '0001_initial'),
         ('users', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='appointment',
+            model_name='review',
             name='hotel',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.user'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='users.user'),
         ),
     ]
