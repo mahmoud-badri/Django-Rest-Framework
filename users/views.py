@@ -2,18 +2,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer, ImageSerializer
-from .models import User,image
-import jwt, datetime
+from .models import User, Image
+import jwt
+import datetime
 from jwt.exceptions import ExpiredSignatureError, DecodeError
-from rest_framework.exceptions import AuthenticationFailed
+from django.shortcuts import redirect
 from rest_framework.decorators import api_view
-from rest_framework import status
-from rest_framework.response import Response
-from django.shortcuts import render,reverse,redirect
 
 
-
-# Create your views here.
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -44,7 +40,6 @@ class LoginView(APIView):
         token = jwt.encode(payload, 'secret', algorithm='HS256')
 
         response = Response()
-
         response.set_cookie(key='jwt', value=token, httponly=True)
         response.data = {
             'jwt': token
@@ -81,37 +76,42 @@ class LogoutView(APIView):
         }
         return response
 
-@api_view(['Get'])
-def ImageList(request,hotel_id):
-    all_images = image.objects.filter(user=hotel_id)
-    image_ser = ImageSerializer(all_images,many=True)
+
+@api_view(['GET'])
+def ImageList(request, hotel_id):
+    all_images = Image.objects.filter(user=hotel_id)
+    image_ser = ImageSerializer(all_images, many=True)
     return Response(image_ser.data)
 
-@api_view(['Get'])
-def ImageDetail(request,image_id):
-    image = image.objects.get(id = image_id )
-    image_ser = ImageSerializer(image,many=False)
+
+@api_view(['GET'])
+def ImageDetail(request, image_id):
+    image_instance = Image.objects.get(id=image_id)
+    image_ser = ImageSerializer(image_instance)
     return Response(image_ser.data)
+
 
 @api_view(['POST'])
 def ImageAdd(request):
     image_ser = ImageSerializer(data=request.data)
     if image_ser.is_valid():
         image_ser.save()
-        # return redirect('imageList')
-    return Response(image_ser.data)
+        return Response(image_ser.data, status=201)
+    return Response(image_ser.errors, status=400)
 
 
-@api_view(['POST'])
-def ImageEdit(request,image_id):
-    images = image.objects.get(id = image_id )
-    image_ser = ImageSerializer(data=request.data,instance=images)
+@api_view(['PUT'])
+def ImageEdit(request, image_id):
+    image_instance = Image.objects.get(id=image_id)
+    image_ser = ImageSerializer(instance=image_instance, data=request.data)
     if image_ser.is_valid():
         image_ser.save()
-        return redirect('ImageList')
+        return Response(image_ser.data)
+    return Response(image_ser.errors, status=400)
+
 
 @api_view(['DELETE'])
-def ImageDelete(request,image_id):
-    image = image.objects.get(id = image_id )
-    image.delete()
-    return Response('the image deleted successfully')
+def ImageDelete(request, image_id):
+    image_instance = Image.objects.get(id=image_id)
+    image_instance.delete()
+    return Response('The image was deleted successfully', status=204)
