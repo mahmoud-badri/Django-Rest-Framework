@@ -2,6 +2,11 @@ from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from .models import Hotel, Booking
 from .serializers import HotelSerializer, BookingSerializer
+from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.response import Response
+from django.shortcuts import render,reverse,redirect
+
 
 class HotelListCreateView(generics.ListCreateAPIView):
     """
@@ -56,3 +61,39 @@ class BookingRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
+
+
+@api_view(['Get'])
+def HotelList(request):
+    all_hotels = Hotel.objects.all()
+    hotel_ser = HotelSerializer(all_hotels,many=True)
+    return Response(hotel_ser.data)
+
+@api_view(['Get'])
+def HotelDetail(request,hotel_id):
+    hotel = Hotel.objects.get(id = hotel_id )
+    hotel_ser = HotelSerializer(hotel,many=False)
+    return Response(hotel_ser.data)
+
+@api_view(['POST'])
+def HotelAdd(request):
+    hotel_ser = HotelSerializer(data=request.data)
+    if hotel_ser.is_valid():
+        hotel_ser.save()
+        # return redirect('hotelList')
+    return Response(hotel_ser.data)
+
+
+@api_view(['POST'])
+def HotelEdit(request,hotel_id):
+    hotels = Hotel.objects.get(id = hotel_id )
+    hotel_ser = HotelSerializer(data=request.data,instance=hotels)
+    if hotel_ser.is_valid():
+        hotel_ser.save()
+        return redirect('HotelList')
+
+@api_view(['DELETE'])
+def HotelDelete(request,hotel_id):
+    hotel = Hotel.objects.get(id = hotel_id )
+    hotel.delete()
+    return Response('the hotel deleted successfully')

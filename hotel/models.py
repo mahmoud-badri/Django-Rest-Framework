@@ -23,7 +23,7 @@ class Hotel(models.Model):
         ('Very Good', 'Very Good'),
         ('Excellent', 'Excellent'),
     )
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE,default = 1)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='', null=True)
     address = models.CharField(max_length=255, null=True)
@@ -33,17 +33,14 @@ class Hotel(models.Model):
     review = models.IntegerField(default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Good')
     description = models.TextField(null=True)
-    governorate = models.CharField(max_length=100, default='Unknown')
+    governorate = models.CharField(max_length=101, default='Unknown')
     # Additional room types
-    single_room = models.FloatField(default=0.0)
-    suite = models.FloatField(default=0.0)
-    family_room = models.FloatField(default=0.0)
+    single_room = models.IntegerField(default=0)
+    suite = models.IntegerField(default=0)
+    family_room = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
-
-
-
 
 class Booking(models.Model):
     ROOM_CHOICES = (
