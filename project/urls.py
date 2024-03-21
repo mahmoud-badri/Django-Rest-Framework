@@ -22,7 +22,7 @@ router = DefaultRouter()
 router.register(r'', UserView, basename='user')
 from django.conf.urls.static import static
 from .settings import *
-from hotel.views import HotelListCreateView, HotelRetrieveUpdateDestroyView  # Import views from the hotel app
+from hotel.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
