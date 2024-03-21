@@ -1,14 +1,18 @@
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from .models import Hotel, Booking
 from .serializers import HotelSerializer, BookingSerializer
-
+from .pagination import CustomPagination
 class HotelListCreateView(generics.ListCreateAPIView):
     """
     API endpoint for listing and creating hotels.
     """
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
+    #pagination_class = CustomPagination
+
+
 
     def create(self, request, *args, **kwargs):
         """
