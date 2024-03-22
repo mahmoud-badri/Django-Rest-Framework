@@ -5,8 +5,8 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator, EmailValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import User
-
+# from django.contrib.auth.models import User
+from users.models import User
 
 class Hotel(models.Model):
     RATING_CHOICES = (
@@ -49,12 +49,12 @@ class Booking(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_email = models.EmailField(_('User Email'), max_length=255)
+    # user_email = models.EmailField(_('User Email'), max_length=255)
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
-    room_type = models.CharField(max_length=50, choices=ROOM_CHOICES)
+    room_type = models.CharField(max_length=50, choices=ROOM_CHOICES,default="Single")
     start_date = models.DateField()
     end_date = models.DateField()
-    total_price = models.FloatField()
+    # total_price = models.FloatField()
     guest = models.IntegerField(default=0)
 
     def clean(self):

@@ -3,12 +3,14 @@ from .views import *
 
 urlpatterns = [
     
-    path('', HotelList, name='HotelList'),
+    path('', HotelList.as_view(), name='HotelList'),
     path('add/',HotelAdd,name='HotelAdd'),
     path('<hotel_id>/',HotelDetail,name='HotelDetail'),
     path('delete/<hotel_id>',HotelDelete,name='HotelDelete'),
     # path('', HotelListCreateView.as_view(), name='hotel-list-create'),
     # path('<int:pk>/', HotelRetrieveUpdateDestroyView.as_view(), name='hotel-retrieve-update-destroy'),
-    # path('booking/', BookingListCreateView.as_view(), name='booking-list-create'),
+    # path('booking', BookingListCreateView, name='booking-list-create'),
+    path('bookingList', BookList.as_view(), name='HotelList'),
+
     # path('booking/<int:pk>/', BookingRetrieveUpdateDestroyView.as_view(), name='booking-retrieve-update-destroy'),
 ]
