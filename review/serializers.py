@@ -1,14 +1,10 @@
 from rest_framework import serializers
-from .models import Review
+from .models import *
 
 
-def get_reviews(self,obj):
-    reviews = obj.reviews.all()
-    serializer = ReviewSerializer(reviews,many=True)
-    return serializer.data
 
-class ReviewSerializer(serializers.ModelSerializer):
+class RateSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Review
-        fields = '__all__'
+            model=Rate
+            fields='__all__'

@@ -17,21 +17,20 @@ class Hotel(models.Model):
         ('⭐️⭐️⭐️⭐️⭐️', '5 Stars'),
     )
     STATUS_CHOICES = (
-        ('Poor', 'Poor'),
-        ('Okay', 'Okay'),
-        ('Good', 'Good'),
-        ('Very Good', 'Very Good'),
-        ('Excellent', 'Excellent'),
+        ('Pending', 'Pending'),
+        ('Verified', 'Verified'),
+        ('Regected', 'Regected'),
+        
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE,default = 1)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='', null=True)
     address = models.CharField(max_length=255, null=True)
-    rate = models.FloatField(default=5, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    # rate = models.FloatField(default=5, validators=[MinValueValidator(1), MaxValueValidator(10)])
     prices = models.FloatField(default=0.0)
-    rating = models.CharField(max_length=10, choices=RATING_CHOICES, default='⭐️')
-    review = models.IntegerField(default=0)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Good')
+    # rating = models.CharField(max_length=10, choices=RATING_CHOICES, default='⭐️')
+    # review = models.IntegerField(default=0)
+    status = models.CharField(max_length=8, choices=STATUS_CHOICES, default='Pending')
     description = models.TextField(null=True)
     governorate = models.CharField(max_length=101, default='Unknown')
     # Additional room types

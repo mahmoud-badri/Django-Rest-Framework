@@ -65,9 +65,11 @@ class BookingRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 @api_view(['Get'])
 def HotelList(request):
+    # all_hotels = Hotel.objects.filter(status="Verified")
     all_hotels = Hotel.objects.all()
+
     hotel_ser = HotelSerializer(all_hotels,many=True)
-    return Response(hotel_ser.data)
+    return Response({"hotels":hotel_ser.data})
 
 @api_view(['Get'])
 def HotelDetail(request,hotel_id):
