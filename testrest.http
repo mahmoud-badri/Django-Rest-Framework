@@ -1,0 +1,127 @@
+#http://127.0.0.1:8000/user/register
+#user
+# {
+#       "email": "mohamed@gmail.com",
+#       "password": "12345678Aa"
+# }
+#hotel4
+# {
+#       "email": "ali@gmail.com",
+#       "password": "12345678Aa"
+# }
+
+
+
+POST http://127.0.0.1:8000/api/register
+Content-Type: application/json
+
+{
+      "name": "hassan",
+      "email": "hassan@gmail.com",
+      "password": "12345678Aa",
+      "type": "user"
+}
+###login
+POST http://127.0.0.1:8000/api/login
+Content-Type: application/json
+
+{
+      "email": "hassan@gmail.com",
+      "password": "12345678Aa"
+}
+
+###add hotel
+POST http://127.0.0.1:8000/hotel/add/
+Content-Type: application/json
+
+{
+      "user": 2,
+      "name": "hotel2",
+      "address": "address1",
+      "price": 100,
+      "status": "Pending"
+}
+
+###get all hotels
+GET http://127.0.0.1:8000/hotel/
+
+
+###book hotel
+POST http://127.0.0.1:8000/hotel/booking_customer
+Content-Type: application/json
+
+{
+      "user": 3,
+      "hotel": 1,
+      "status": "Pending",
+      "start_date": "2021-09-01",
+      "end_date": "2022-09-10",
+      "room_type": "Single"
+}
+
+
+###get all bookings
+##booking_by_hotel_owner/<id>/
+GET http://127.0.0.1:8000/hotel/booking_by_hotel_owner/2/
+Content-Type: application/json
+
+
+#### id for booking
+POST http://127.0.0.1:8000/hotel/confirm_booking/2/
+
+
+####  reject booking
+POST http://127.0.0.1:8000/hotel/reject_booking/2/
+
+
+
+
+###create rate
+POST http://127.0.0.1:8000/api_review/create-rate/
+Content-Type: application/json
+
+{
+      "hotel": 1,
+      "rating": 4,
+      "description":"good hotel",
+      "user":3
+}
+###get all rates by hotel id
+GET http://127.0.0.1:8000/api_review/get-all-rates/1
+Content-Type: application/json
+
+#### get rate by rate id
+GET http://127.0.0.1:8000/api_review/get-rate/1
+Content-Type: application/json
+
+
+
+###update rate by rateid
+PUT http://127.0.0.1:8000/api_review/update-rate/1
+Content-Type: application/json
+
+{
+      "rating": 4,
+      "description":"badsadsadasd hotel",
+      "user":3
+}
+
+
+###delete rate by rateid
+DELETE http://127.0.0.1:8000/api_review/delete-rate/4
+Content-Type: application/json
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
