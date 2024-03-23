@@ -40,6 +40,10 @@ class Hotel(models.Model):
     
     def __str__(self):
         return self.name
+    
+class image(models.Model):
+    user = models.ForeignKey(Hotel,on_delete=models.CASCADE)
+    img = models.ImageField(upload_to="hotel", null=False, blank=True)
 
 class Booking(models.Model):
     ROOM_CHOICES = (
@@ -63,3 +67,6 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.user}'s booking at {self.hotel.name}"
+    
+
+    
