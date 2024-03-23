@@ -10,8 +10,38 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import render,reverse,redirect
+from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
+def register_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        # Check if the email is already taken
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({'message': 'email already exists'}, status=400)
+        
+        # Create a new user
+        user = User.objects.create_user(email=email, password=password)
+        user.save()
+        
+        return JsonResponse({'message': 'Registration successful'})
 
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
 
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'message': 'Login successful'})
+        else:
+            return JsonResponse({'message': 'Invalid credentials'}, status=401)
+
+def logout_view(request):
+    logout(request)
+    return JsonResponse({'message': 'Logout successful'})
 
 # Create your views here.
 class RegisterView(APIView):
@@ -74,6 +104,11 @@ class UserView(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+@api_view(['Get'])
+def allUsers(request):
+    all_Users = User.objects.all()
+    User_ser = UserSerializer(all_Users,many=True)
+    return Response(User_ser.data)
 
 class LogoutView(APIView):
     def post(self, request):

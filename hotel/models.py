@@ -22,7 +22,7 @@ class Hotel(models.Model):
         ('Regected', 'Regected'),
         
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE,default = 1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='', null=True)
     address = models.CharField(max_length=255, null=True)
@@ -37,7 +37,7 @@ class Hotel(models.Model):
     single_room = models.IntegerField(default=0)
     suite = models.IntegerField(default=0)
     family_room = models.IntegerField(default=0)
-
+    
     def __str__(self):
         return self.name
 
@@ -54,7 +54,7 @@ class Booking(models.Model):
     room_type = models.CharField(max_length=50, choices=ROOM_CHOICES,default="Single")
     start_date = models.DateField()
     end_date = models.DateField()
-    # total_price = models.FloatField()
+    total_price = models.FloatField(default=1.0)
     guest = models.IntegerField(default=0)
 
     def clean(self):

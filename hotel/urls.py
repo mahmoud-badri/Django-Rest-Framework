@@ -9,8 +9,9 @@ urlpatterns = [
     path('delete/<hotel_id>',HotelDelete,name='HotelDelete'),
     # path('', HotelListCreateView.as_view(), name='hotel-list-create'),
     # path('<int:pk>/', HotelRetrieveUpdateDestroyView.as_view(), name='hotel-retrieve-update-destroy'),
-    # path('booking', BookingListCreateView, name='booking-list-create'),
+    path('booking', BookingListCreateView, name='booking-list-create'),
     path('bookingList', BookList.as_view(), name='HotelList'),
+    path('BookingBasedHotel/<hotel_id>', BookingBasedHotel, name='BookingBasedHotel'),
 
     # path('booking/<int:pk>/', BookingRetrieveUpdateDestroyView.as_view(), name='booking-retrieve-update-destroy'),
 ]
