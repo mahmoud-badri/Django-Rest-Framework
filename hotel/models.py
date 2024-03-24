@@ -22,7 +22,7 @@ class Hotel(models.Model):
         ('Regected', 'Regected'),
         
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE,default = 1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='', null=True)
     address = models.CharField(max_length=255, null=True)
@@ -47,6 +47,8 @@ class Booking(models.Model):
         ('Suite', 'Suite'),
         ('Family', 'Family Room'),
     )
+    
+    
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # user_email = models.EmailField(_('User Email'), max_length=255)
@@ -56,6 +58,8 @@ class Booking(models.Model):
     end_date = models.DateField()
     # total_price = models.FloatField()
     guest = models.IntegerField(default=0)
+    is_accepted = models.BooleanField(default=False)
+    is_paid = models.BooleanField(default=False)
 
     def clean(self):
         if self.start_date >= self.end_date:
