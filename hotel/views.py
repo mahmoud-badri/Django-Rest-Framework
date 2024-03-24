@@ -2,7 +2,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from .models import Hotel, Booking
-from .serializers import HotelSerializer, BookingSerializer
+from .serializers import *
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
@@ -133,3 +133,39 @@ def HotelDelete(request,hotel_id):
     hotel = Hotel.objects.get(id = hotel_id )
     hotel.delete()
     return Response('the hotel deleted successfully')
+
+@api_view(['POST'])
+def booking_customer(request):
+    print("hello from booking add")
+    booking_ser = BookingSerializer(data=request.data)
+    if request.method == 'POST':
+        if booking_ser.is_valid():
+            booking_ser.save()
+            return Response(booking_ser.data)
+        return Response(booking_ser.errors)
+    
+@api_view(['GET'])
+def booking_by_hotel_owner(request, id):
+    hotels = Hotel.objects.filter(user_id=id)
+    if hotels.exists():
+        bookings = []
+        for hotel in hotels:
+            bookings.extend(hotel.booking_set.all())
+        booking_ser = BookingHotelSerializer(bookings, many=True)
+        return Response(booking_ser.data)
+    else:
+        return Response("No hotel found for this owner ID", status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def confirm_booking(request, id):
+    booking = Booking.objects.get(id=id)
+    booking.is_accepted = True
+    booking.save()
+    return Response('Booking confirmed successfully')
+
+@api_view(['POST'])
+def reject_booking(request, id):
+    booking = Booking.objects.get(id=id)
+    booking.is_accepted = False
+    booking.save()
+    return Response('Booking rejected successfully')
