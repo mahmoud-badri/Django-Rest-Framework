@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer, ImageSerializer
-from .models import User,image
+from .serializers import UserSerializer
+from .models import User
 import jwt, datetime
 from jwt.exceptions import ExpiredSignatureError, DecodeError
 from rest_framework.exceptions import AuthenticationFailed
