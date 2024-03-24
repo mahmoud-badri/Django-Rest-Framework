@@ -1,64 +1,49 @@
 from django.shortcuts import render
-from .models import Review
 from django.shortcuts import get_object_or_404,render
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework import status
 from django.db.models import Avg
+from .serializers import *
+from hotel.models import *
+from .models import *
+from rest_framework import generics
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def create_review(request,pk):
-    user = request.user
-    hotel = get_object_or_404(hotel,id=pk)
-    data = request.data
-    review = hotel.reviews.filter(user=user)
-   
-    if data['rating'] <= 0 or data['rating'] >= 5:
-        return Response({"error":'Please select between 1 to 5 only'}
-                        ,status=status.HTTP_400_BAD_REQUEST) 
-    elif review.exists():
-        new_review = {'rating':data['rating'], 'comment':data['comment'] }
-        review.update(**new_review)
-
-        rating = hotel.reviews.aggregate(avg_ratings = Avg('rating'))
-        hotel.ratings = rating['avg_ratings']
-        hotel.save()
-
-        return Response({'details':'Hotel review updated'})
-    else:
-        Review.objects.create(
-            user=user,
-            hotel=hotel,
-            rating= data['rating'],
-            comment= data['comment']
-        )
-        rating = hotel.reviews.aggregate(avg_ratings = Avg('rating'))
-        hotel.ratings = rating['avg_ratings']
-        hotel.save()
-        return Response({'details':'hotel review created'})
-    
+class ListRates(generics.ListAPIView):
+    queryset=Rate.objects.all()
+    serializer_class=RateSerializer
 
 
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_review(request,pk):
-    user = request.user
-    hotel = get_object_or_404(hotel,id=pk)
-   
-    review = hotel.reviews.filter(user=user)
-   
- 
-    if review.exists():
-        review.delete()
-        rating = hotel.reviews.aggregate(avg_ratings = Avg('rating'))
-        if rating['avg_ratings'] is None:
-            rating['avg_ratings'] = 0
-            hotel.ratings = rating['avg_ratings']
-            hotel.save()
-            return Response({'details':'Product review deleted'})
-    else:
-        return Response({'error':'Review not found'},status=status.HTTP_404_NOT_FOUND)
+
+class CreateRates(generics.CreateAPIView):
+    queryset=Rate.objects.all()
+    serializer_class=RateSerializer
+    # permission_classes = [IsAuthenticated]  -->Uncomment for authentication
+    # permission_classes = (CustomPermission,)
 
 
+class GetRateById(generics.RetrieveAPIView):
+    queryset=Rate.objects.all()
+    serializer_class=RateSerializer
+    lookup_field='id'
+
+
+class DeleteRateById(generics.DestroyAPIView):
+    queryset=Rate.objects.all()
+    serializer_class=RateSerializer
+    lookup_field='id'
+    # permission_classes = [IsAuthenticated] -->Uncomment for authentication
+    # permission_classes = (CustomPermission,)
+
+# PAtch method
+class UpdateRateById(generics.UpdateAPIView):
+    queryset=Rate.objects.all()
+    serializer_class=RateSerializer
+    lookup_field='id'
+
+@api_view(['GET'])
+def allRates(req,id):
+    all_rates=Rate.objects.filter(hotel=id)
+    data= RateSerializer(all_rates,many=True).data
+    return Response ({'data':data})
