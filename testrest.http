@@ -17,8 +17,9 @@ Content-Type: application/json
 
 {
       "name": "hassan",
-      "email": "aheeladawy@gmail.com",
+      "email": "mostufazx@gmail.com",
       "password": "12345678Aa",
+      "confirm_password": "12345678Aa",
       "type": "user"
 }
 ###login

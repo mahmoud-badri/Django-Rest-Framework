@@ -14,6 +14,9 @@ from rest_framework.response import Response
 from django.shortcuts import render,reverse,redirect
 from django.core.mail import send_mail
 from django.http import HttpResponse
+from django.conf import settings
+from django.core.mail import send_mail
+from rest_framework.exceptions import APIException
 #from .email_utils import send_activation_email
 
 
@@ -30,9 +33,6 @@ class RegisterView(APIView):
             settings.SECRET_KEY,
             algorithm='HS256'
         )
-        # user_email = user_email  # Replace with the user's email
-        # send_activation_email(user_email)
-        # return HttpResponse("Registration successful. Activation email sent.")
 
         # Send activation email
         activation_link = f"{settings.BASE_URL}/activate/{activation_token}"
@@ -40,10 +40,14 @@ class RegisterView(APIView):
         message = f'Hi {user.name},\n\nPlease click the link below to activate your account:\n{activation_link}'
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [user.email]
-        send_mail(subject, message, email_from, recipient_list)
+
+        try:
+            send_mail(subject, message, email_from, recipient_list)
+        except Exception as e:
+            # Handle email sending failure
+            raise APIException('Failed to send activation email.')
 
         return Response({'message': 'User created successfully. Please check your email to activate your account.'})
-
 
 class LoginView(APIView):
     def post(self, request):
@@ -57,6 +61,9 @@ class LoginView(APIView):
 
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect password!')
+
+        if not user.email_verified:
+            raise AuthenticationFailed('Email not verified! Please verify your email.')
 
         payload = {
             'id': user.id,
@@ -76,6 +83,7 @@ class LoginView(APIView):
         response.data['user'] = serializer.data
     
         return response
+
 
 
 class UserView(APIView):
