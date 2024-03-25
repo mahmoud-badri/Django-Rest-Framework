@@ -17,7 +17,6 @@ class Hotel(models.Model):
         ('⭐️⭐️⭐️⭐️⭐️', '5 Stars'),
     )
     STATUS_CHOICES = (
-
         ('Pending', 'Pending'),
         ('Verified', 'Verified'),
         ('Regected', 'Regected'),
@@ -30,6 +29,7 @@ class Hotel(models.Model):
     # rate = models.FloatField(default=5, validators=[MinValueValidator(1), MaxValueValidator(10)])
     prices = models.FloatField(default=0.0)
     rating = models.CharField(max_length=10, choices=RATING_CHOICES, default='⭐️')
+    # rating = models.CharField(max_length=10, choices=RATING_CHOICES, default='⭐️')
     # review = models.IntegerField(default=0)
     status = models.CharField(max_length=8, choices=STATUS_CHOICES, default='Pending')
     description = models.TextField(null=True)
@@ -47,10 +47,17 @@ class Hotel(models.Model):
     is_Pet = models.BooleanField(default=False)
     is_Accessibiliy = models.BooleanField(default=False)
     is_Parking = models.BooleanField(default=False)
-    
+
     def __str__(self):
         return self.name
-    
+
+    def get_amount(self):
+        if self.single_room:
+            return self.single_room
+        elif self.suite:
+            return self.suite
+        else:
+            return self.family_room
 
 class Booking(models.Model):
     ROOM_CHOICES = (
@@ -69,6 +76,7 @@ class Booking(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     total_price = models.FloatField(default=1.0)
+    # total_price = models.FloatField()
     guest = models.IntegerField(default=0)
     is_accepted = models.BooleanField(default=False)
     is_paid = models.BooleanField(default=False)
@@ -79,6 +87,4 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.user}'s booking at {self.hotel.name}"
-    
-
     

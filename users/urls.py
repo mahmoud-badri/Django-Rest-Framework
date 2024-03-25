@@ -13,4 +13,5 @@ urlpatterns = [
     path('edit/<image_id>',ImageEdit,name='ImageEdit'),
     path('delete/<image_id>',ImageDelete,name='ImageDelete'),
     path('activate/<str:token>/', ActivateAccount.as_view(), name='activate_account'),
+
 ]

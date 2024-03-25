@@ -1,5 +1,12 @@
 from rest_framework import serializers
 from .models import User
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.core.mail import send_mail, EmailMessage
+from rest_framework import serializers
+
+from send.utils import send_custom_email
+from .models import User,image
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,4 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = image
+        fields = '__all__'

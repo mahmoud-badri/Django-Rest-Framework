@@ -15,3 +15,4 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"Appointment from {self.user} at {self.hotel} on {self.date}"
+

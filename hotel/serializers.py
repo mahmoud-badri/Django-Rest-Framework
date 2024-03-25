@@ -15,7 +15,6 @@ class BookingSerializer(serializers.ModelSerializer):
         model = Booking
         fields = '__all__'
 
-    
     def create(self, validated_data):
         booking = Booking.objects.create(**validated_data)
         return booking

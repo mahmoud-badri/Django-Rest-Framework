@@ -1,21 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-
 from project import settings
 from .serializers import UserSerializer, ImageSerializer
 from .models import User,image
-
-from .serializers import UserSerializer
-from .models import User
 import jwt, datetime
 from jwt.exceptions import ExpiredSignatureError, DecodeError
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view
 from rest_framework import status
-from rest_framework.response import Response
 from django.shortcuts import render,reverse,redirect
-from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.mail import send_mail
@@ -106,6 +99,7 @@ class RegisterView(APIView):
 
         return Response({'message': 'User created successfully. Please check your email to activate your account.'})
 
+
 class LoginView(APIView):
     def post(self, request):
         email = request.data['email']
@@ -140,7 +134,6 @@ class LoginView(APIView):
         response.data['user'] = serializer.data
     
         return response
-
 
 
 class UserView(APIView):

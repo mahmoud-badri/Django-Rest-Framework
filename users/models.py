@@ -32,16 +32,16 @@ def validate_egyptian_phone(value):
 
 
 class User(AbstractUser):
-    email = models.EmailField(max_length=255, unique=True, validators=[EmailValidator(), validate_email_format])
+
     name = models.CharField(max_length=255)
-    # phone_number = models.CharField(max_length=11, validators=[validate_egyptian_phone],blank=True,null=True)
+    email = models.EmailField(max_length=255, unique=True, validators=[EmailValidator(), validate_email_format])
+    phone_number = models.CharField(max_length=11, validators=[validate_egyptian_phone],blank=True,null=True)
     user_type = [
         ('user', 'User'),
         ('hotel', 'Hotel'),
     ]
 
     type = models.CharField(max_length=10,choices=user_type,blank=True,null=True)
-
     User_Type = (
         ('user', 'User'),
         ('hotel', 'Hotel'),
@@ -49,6 +49,7 @@ class User(AbstractUser):
     password = models.CharField(max_length=255, validators=[MinLengthValidator(8), validate_password_complexity])
     confirm_password = models.CharField(max_length=255,default='0')
     email_verified = models.BooleanField(default=False)
+
     username = None
 
     USERNAME_FIELD = 'email'
@@ -68,3 +69,7 @@ class User(AbstractUser):
 
 
 
+
+class image(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    img = models.ImageField(upload_to="hotel", null=False, blank=True)

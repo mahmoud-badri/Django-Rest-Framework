@@ -1,6 +1,11 @@
+
+from django.conf import settings
+from django.core.mail import send_mail
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
+
+from payment.utils import payment_key_request
 from .models import Hotel, Booking
 from .serializers import *
 from rest_framework.decorators import api_view
@@ -11,6 +16,7 @@ from django.shortcuts import render,reverse,redirect
 from rest_framework.views import APIView
 
 
+from django.shortcuts import get_object_or_404
 from .pagination import CustomPagination
 class HotelListCreateView(generics.ListCreateAPIView):
     """
@@ -168,4 +174,26 @@ def reject_booking(request, id):
     booking = Booking.objects.get(id=id)
     booking.is_accepted = False
     booking.save()
+    booking = get_object_or_404(Booking, id=id)
+    payment_url = payment_key_request(booking.user, booking.hotel.get_amount())
+    booking.is_accepted = True
+    booking.save()
+    subject = 'Complete Your Hotel Reservation Payment'
+    message = f'Please complete your payment by clicking the link below:\n\n{payment_url}'
+    recipient_email = booking.user.email  # Change to the user's email
+    
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient_email])
+    return Response('Booking confirmed successfully')
+
+
+@api_view(['POST'])
+def reject_booking(request, id):
+    booking = get_object_or_404(Booking, id=id)
+    booking.is_accepted = False
+    booking.save()
+    subject = 'Information About Your Hotel Reservation'
+    message = 'Your hotel reservation has been rejected please try to reserve another hotel'
+    recipient_email = booking.user.email  # Change to the user's email
+
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient_email])
     return Response('Booking rejected successfully')
