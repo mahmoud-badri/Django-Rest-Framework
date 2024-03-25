@@ -16,18 +16,18 @@ POST http://127.0.0.1:8000/api/register
 Content-Type: application/json
 
 {
-      "name": "mahmoud",
-      "email": "eng.mahmoud.badrii@gmail.com",
-      "password": "12345678Aa",
-      "type": "user"
+      "name": "hotel",
+      "email": "hotel1@gmail.com",
+      "password": "1234MMmm@@",
+      "type": "hotel"
 }
 ###login
 POST http://127.0.0.1:8000/api/login
 Content-Type: application/json
 
 {
-      "email": "ziad@gmail.com",
-      "password": "12345678Aa"
+      "email": "eng.mahmoud.badrii@gmail.com",
+      "password": "1234MMmm@@"
 }
 
 ###add hotel
@@ -35,14 +35,14 @@ POST http://127.0.0.1:8000/hotel/add/
 Content-Type: application/json
 
 {
-      "user": 6,
-      "name": "maadi",
+      "user": 32,
+      "name": "maadi22",
       "address": "address1",
       "price": 100,
       "status": "Pending",
       "description": "best hotel",
       "governorate": "cairo",
-      "suite": 200
+      "suite": 650
 
 }
 
@@ -55,12 +55,12 @@ POST http://127.0.0.1:8000/hotel/booking_customer
 Content-Type: application/json
 
 {
-      "user": 28,
-      "hotel": 10,
+      "user": 30,
+      "hotel": 9,
       "status": "Pending",
       "start_date": "2021-09-01",
       "end_date": "2022-09-10",
-      "room_type": "Single"
+      "room_type": "Suite"
 }
 
 
@@ -71,11 +71,11 @@ GET http://127.0.0.1:8000/hotel/booking_by_hotel_owner/9/
 Content-Type: application/json
 
 #### id for booking
-POST http://127.0.0.1:8000/hotel/confirm_booking/20/
+POST http://127.0.0.1:8000/hotel/confirm_booking/31/
 
 
 ####  reject booking
-POST http://127.0.0.1:8000/hotel/reject_booking/16/
+POST http://127.0.0.1:8000/hotel/reject_booking/27/
 
 
 ###create rate

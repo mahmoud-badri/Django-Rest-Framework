@@ -145,9 +145,11 @@ CORS_ALLOW_CREDENTIALS = True
 
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'khaledabdelfattah414@gmail.com'
-EMAIL_HOST_PASSWORD = 'kjnuonxmbckpjupx'
+EMAIL_HOST_USER = 'booking24app@gmail.com'
+EMAIL_HOST_PASSWORD = 'urcoshkcpnoqlcvh'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+

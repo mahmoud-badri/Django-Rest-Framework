@@ -163,7 +163,7 @@ def confirm_booking(request, id):
     subject = 'Complete Your Hotel Reservation Payment'
     message = f'Please complete your payment by clicking the link below:\n\n{payment_url}'
     recipient_email = booking.user.email  # Change to the user's email
-
+    
     send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient_email])
     return Response('Booking confirmed successfully')
 
