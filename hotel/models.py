@@ -38,7 +38,15 @@ class Hotel(models.Model):
     single_room = models.IntegerField(default=0)
     suite = models.IntegerField(default=0)
     family_room = models.IntegerField(default=0)
-
+    facility_desc = models.TextField(max_length=1000,default="lorem Facility")
+    facility = models.TextField(max_length=1000,default="lorem Facility")
+    is_tv = models.BooleanField(default=False)
+    is_wifi = models.BooleanField(default=False)
+    is_poll = models.BooleanField(default=False)
+    is_BreakFast = models.BooleanField(default=False)
+    is_Pet = models.BooleanField(default=False)
+    is_Accessibiliy = models.BooleanField(default=False)
+    is_Parking = models.BooleanField(default=False)
     def __str__(self):
         return self.name
 

@@ -18,8 +18,28 @@ from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.exceptions import APIException
 #from .email_utils import send_activation_email
-
-
+class ActivateAccount(APIView):
+    def get(self, request, token):
+        try:
+            # Decode the activation token
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            user_id = decoded_token['user_id']
+            
+            # Fetch the user from the database
+            user = User.objects.get(id=user_id)
+            
+            # Update the email_verified field
+            user.email_verified = True
+            user.save()
+            
+            # Return a success message or redirect the user to a page confirming activation
+            return HttpResponse({ '<h1 >Your account has been successfully activated.</h1>'})
+        except jwt.ExpiredSignatureError:
+            return HttpResponse({ '<h1 >Activation link has expired.</h1>'}, status=status.HTTP_400_BAD_REQUEST)
+        except jwt.DecodeError:
+            return HttpResponse({ '<h1 >Invalid token.</h1>'}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return HttpResponse({ '<h1 >User not found.</h1>'}, status=status.HTTP_404_NOT_FOUND)
 
 class RegisterView(APIView):
     def post(self, request):
@@ -35,7 +55,7 @@ class RegisterView(APIView):
         )
 
         # Send activation email
-        activation_link = f"{settings.BASE_URL}/activate/{activation_token}"
+        activation_link = f"{settings.BASE_URL}api/activate/{activation_token}"
         subject = 'Activate Your Account'
         message = f'Hi {user.name},\n\nPlease click the link below to activate your account:\n{activation_link}'
         email_from = settings.EMAIL_HOST_USER

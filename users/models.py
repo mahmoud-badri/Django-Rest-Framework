@@ -47,7 +47,7 @@ class User(AbstractUser):
         ('hotel', 'Hotel'),
     )
     password = models.CharField(max_length=255, validators=[MinLengthValidator(8), validate_password_complexity])
-    confirm_password = models.CharField(max_length=255)
+    confirm_password = models.CharField(max_length=255,default='0')
     email_verified = models.BooleanField(default=False)
     username = None
 
