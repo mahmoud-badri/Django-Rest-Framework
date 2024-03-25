@@ -34,7 +34,7 @@ def validate_egyptian_phone(value):
 class User(AbstractUser):
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True, validators=[EmailValidator(), validate_email_format])
-    phone_number = models.CharField(max_length=11, validators=[validate_egyptian_phone],blank=True,null=True)
+    # phone_number = models.CharField(max_length=11, validators=[validate_egyptian_phone],blank=True,null=True)
     user_type = [
         ('user', 'User'),
         ('hotel', 'Hotel'),
@@ -42,7 +42,10 @@ class User(AbstractUser):
 
     type = models.CharField(max_length=10,choices=user_type,blank=True,null=True)
 
-    
+    User_Type = (
+        ('user', 'User'),
+        ('hotel', 'Hotel'),
+    )
     password = models.CharField(max_length=255, validators=[MinLengthValidator(8), validate_password_complexity])
     username = None
 

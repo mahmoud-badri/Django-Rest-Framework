@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+
+from project import settings
 from .serializers import UserSerializer, ImageSerializer
 from .models import User,image
 import jwt, datetime
@@ -10,16 +12,37 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import render,reverse,redirect
+from django.core.mail import send_mail
+from django.http import HttpResponse
+#from .email_utils import send_activation_email
 
 
 
-# Create your views here.
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        user = serializer.save()
+
+        # Generate activation token
+        activation_token = jwt.encode(
+            {'user_id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)},
+            settings.SECRET_KEY,
+            algorithm='HS256'
+        )
+        # user_email = user_email  # Replace with the user's email
+        # send_activation_email(user_email)
+        # return HttpResponse("Registration successful. Activation email sent.")
+
+        # Send activation email
+        activation_link = f"{settings.BASE_URL}/activate/{activation_token}"
+        subject = 'Activate Your Account'
+        message = f'Hi {user.name},\n\nPlease click the link below to activate your account:\n{activation_link}'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [user.email]
+        send_mail(subject, message, email_from, recipient_list)
+
+        return Response({'message': 'User created successfully. Please check your email to activate your account.'})
 
 
 class LoginView(APIView):
