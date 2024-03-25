@@ -29,7 +29,7 @@ class Hotel(models.Model):
     address = models.CharField(max_length=255, null=True)
     # rate = models.FloatField(default=5, validators=[MinValueValidator(1), MaxValueValidator(10)])
     prices = models.FloatField(default=0.0)
-    # rating = models.CharField(max_length=10, choices=RATING_CHOICES, default='⭐️')
+    rating = models.CharField(max_length=10, choices=RATING_CHOICES, default='⭐️')
     # review = models.IntegerField(default=0)
     status = models.CharField(max_length=8, choices=STATUS_CHOICES, default='Pending')
     description = models.TextField(null=True)
