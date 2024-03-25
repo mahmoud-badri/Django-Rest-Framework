@@ -25,10 +25,10 @@ def validate_password_complexity(value):
     # Add more checks as needed
 
 
-def validate_egyptian_phone(value):
-    phone_regex = r'^01[0125]{1}[0-9]{8}$'  # Matches the format 01X followed by 8 digits
-    if not re.match(phone_regex, value):
-        raise ValidationError('Invalid Egyptian phone number.')
+# def validate_egyptian_phone(value):
+#     phone_regex = r'^01[0125]{1}[0-9]{8}$'  # Matches the format 01X followed by 8 digits
+#     if not re.match(phone_regex, value):
+#         raise ValidationError('Invalid Egyptian phone number.')
 
 
 class User(AbstractUser):
