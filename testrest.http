@@ -67,7 +67,7 @@ Content-Type: application/json
 
 ###get all bookings
 ##booking_by_hotel_owner/<id>/
-GET http://127.0.0.1:8000/hotel/booking_by_hotel_owner/10/
+GET http://127.0.0.1:8000/hotel/booking_by_hotel_owner/9/
 Content-Type: application/json
 
 #### id for booking
