@@ -16,6 +16,12 @@ POST http://127.0.0.1:8000/api/register
 Content-Type: application/json
 
 {
+      "name": "hassan",
+      "email": "mostufazx@gmail.com",
+      "password": "12345678Aa",
+      "confirm_password": "12345678Aa",
+      "type": "user"
+
       "name": "hotel",
       "email": "hotel1@gmail.com",
       "password": "1234MMmm@@",
@@ -26,8 +32,9 @@ POST http://127.0.0.1:8000/api/login
 Content-Type: application/json
 
 {
-      "email": "eng.mahmoud.badrii@gmail.com",
-      "password": "1234MMmm@@"
+      "email": "aheeladawy@gmail.com",
+      "password": "12345678Aa"
+
 }
 
 ###add hotel
@@ -35,14 +42,11 @@ POST http://127.0.0.1:8000/hotel/add/
 Content-Type: application/json
 
 {
-      "user": 32,
-      "name": "maadi22",
+      "user": 2,
+      "name": "hotel2",
       "address": "address1",
       "price": 100,
-      "status": "Pending",
-      "description": "best hotel",
-      "governorate": "cairo",
-      "suite": 650
+      "status": "Pending"
 
 }
 
@@ -55,27 +59,32 @@ POST http://127.0.0.1:8000/hotel/booking_customer
 Content-Type: application/json
 
 {
-      "user": 30,
-      "hotel": 9,
+      "user": 3,
+      "hotel": 1,
       "status": "Pending",
       "start_date": "2021-09-01",
       "end_date": "2022-09-10",
-      "room_type": "Suite"
+      "room_type": "Single"
 }
 
 
 
 ###get all bookings
 ##booking_by_hotel_owner/<id>/
-GET http://127.0.0.1:8000/hotel/booking_by_hotel_owner/9/
+###get all hotels by hotel owner id
+
+GET http://127.0.0.1:8000/hotel/booking_by_hotel_owner/2/
 Content-Type: application/json
 
+
 #### id for booking
-POST http://127.0.0.1:8000/hotel/confirm_booking/31/
+POST http://127.0.0.1:8000/hotel/confirm_booking/2/
 
 
 ####  reject booking
-POST http://127.0.0.1:8000/hotel/reject_booking/27/
+POST http://127.0.0.1:8000/hotel/reject_booking/2/
+
+
 
 
 ###create rate
@@ -112,7 +121,6 @@ Content-Type: application/json
 ###delete rate by rateid
 DELETE http://127.0.0.1:8000/api_review/delete-rate/4
 Content-Type: application/json
-
 
 
 ###send successfully email

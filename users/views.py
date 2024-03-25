@@ -1,25 +1,103 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from project import settings
 from .serializers import UserSerializer, ImageSerializer
 from .models import User,image
 import jwt, datetime
 from jwt.exceptions import ExpiredSignatureError, DecodeError
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view
 from rest_framework import status
-from rest_framework.response import Response
 from django.shortcuts import render,reverse,redirect
+from django.http import HttpResponse
+from django.conf import settings
+from django.core.mail import send_mail
+from rest_framework.exceptions import APIException
+#from .email_utils import send_activation_email
+class ActivateAccount(APIView):
+    def get(self, request, token):
+        try:
+            # Decode the activation token
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            user_id = decoded_token['user_id']
+            
+            # Fetch the user from the database
+            user = User.objects.get(id=user_id)
+            
+            # Update the email_verified field
+            user.email_verified = True
+            user.save()
+            
+            # Return a success message or redirect the user to a page confirming activation
+            return HttpResponse({ '<h1 >Your account has been successfully activated.</h1>'})
+        except jwt.ExpiredSignatureError:
+            return HttpResponse({ '<h1 >Activation link has expired.</h1>'}, status=status.HTTP_400_BAD_REQUEST)
+        except jwt.DecodeError:
+            return HttpResponse({ '<h1 >Invalid token.</h1>'}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return HttpResponse({ '<h1 >User not found.</h1>'}, status=status.HTTP_404_NOT_FOUND)
 
+from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
+def register_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        # Check if the email is already taken
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({'message': 'email already exists'}, status=400)
+        
+        # Create a new user
+        user = User.objects.create_user(email=email, password=password)
+        user.save()
+        
+        return JsonResponse({'message': 'Registration successful'})
 
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'message': 'Login successful'})
+        else:
+            return JsonResponse({'message': 'Invalid credentials'}, status=401)
+
+def logout_view(request):
+    logout(request)
+    return JsonResponse({'message': 'Logout successful'})
 
 # Create your views here.
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        user = serializer.save()
+
+        # Generate activation token
+        activation_token = jwt.encode(
+            {'user_id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)},
+            settings.SECRET_KEY,
+            algorithm='HS256'
+        )
+
+        # Send activation email
+        activation_link = f"{settings.BASE_URL}api/activate/{activation_token}"
+        subject = 'Activate Your Account'
+        message = f'Hi {user.name},\n\nPlease click the link below to activate your account:\n{activation_link}'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [user.email]
+
+        try:
+            send_mail(subject, message, email_from, recipient_list)
+        except Exception as e:
+            # Handle email sending failure
+            raise APIException('Failed to send activation email.')
+
+        return Response({'message': 'User created successfully. Please check your email to activate your account.'})
 
 
 class LoginView(APIView):
@@ -34,6 +112,9 @@ class LoginView(APIView):
 
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect password!')
+
+        if not user.email_verified:
+            raise AuthenticationFailed('Email not verified! Please verify your email.')
 
         payload = {
             'id': user.id,
@@ -74,6 +155,11 @@ class UserView(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+@api_view(['Get'])
+def allUsers(request):
+    all_Users = User.objects.all()
+    User_ser = UserSerializer(all_Users,many=True)
+    return Response(User_ser.data)
 
 class LogoutView(APIView):
     def post(self, request):

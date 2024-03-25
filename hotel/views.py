@@ -1,3 +1,4 @@
+
 from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.pagination import PageNumberPagination
@@ -13,6 +14,7 @@ from rest_framework.response import Response
 from django.shortcuts import render,reverse,redirect
 
 from rest_framework.views import APIView
+
 
 from django.shortcuts import get_object_or_404
 from .pagination import CustomPagination
@@ -61,6 +63,12 @@ class BookList(generics.ListAPIView):
     queryset=Booking.objects.all()
     serializer_class=BookingSerializer
 
+@api_view(['Get'])
+def BookingBasedHotel(request,hotel_id):
+    booking = Hotel.objects.filter(hotel = hotel_id )
+    booking_ser = BookingSerializer(booking,many=True)
+    return Response({booking_ser.data})
+
 # class BookingListCreateView(generics.ListCreateAPIView):
 #     """
 #     API endpoint for listing and creating bookings.
@@ -99,7 +107,7 @@ class BookList(generics.ListAPIView):
 #     hotel_ser = HotelSerializer(all_hotels,many=True)
 #     return Response({"hotels":hotel_ser.data})
 class HotelList(generics.ListAPIView):
-    queryset=Hotel.objects.all()
+    queryset=Hotel.objects.filter(status="Verified")
     serializer_class=HotelSerializer
 
 
@@ -156,6 +164,16 @@ def booking_by_hotel_owner(request, id):
 
 @api_view(['POST'])
 def confirm_booking(request, id):
+    booking = Booking.objects.get(id=id)
+    booking.is_accepted = True
+    booking.save()
+    return Response('Booking confirmed successfully')
+
+@api_view(['POST'])
+def reject_booking(request, id):
+    booking = Booking.objects.get(id=id)
+    booking.is_accepted = False
+    booking.save()
     booking = get_object_or_404(Booking, id=id)
     payment_url = payment_key_request(booking.user, booking.hotel.get_amount())
     booking.is_accepted = True

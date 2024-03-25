@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator, EmailValidator
 from django.core.exceptions import ValidationError
+#from users.models import User
 
 
 def validate_email_format(value):
@@ -31,6 +32,7 @@ def validate_egyptian_phone(value):
 
 
 class User(AbstractUser):
+
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True, validators=[EmailValidator(), validate_email_format])
     phone_number = models.CharField(max_length=11, validators=[validate_egyptian_phone],blank=True,null=True)
@@ -40,9 +42,10 @@ class User(AbstractUser):
     ]
 
     type = models.CharField(max_length=10,choices=user_type,blank=True,null=True)
-
-    
     password = models.CharField(max_length=255, validators=[MinLengthValidator(8), validate_password_complexity])
+    confirm_password = models.CharField(max_length=255,default='0')
+    email_verified = models.BooleanField(default=False)
+
     username = None
 
     USERNAME_FIELD = 'email'
@@ -59,6 +62,7 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         self.full_clean()  # Run full validation before saving
         super().save(*args, **kwargs)
+
 
 
 

@@ -34,5 +34,6 @@ urlpatterns = [
     # path('api/', include('ratings.urls')), 
     path('api/', include('users.urls')),
     path('api_review/', include('review.urls')),
+
     path('', include('send.urls')),
 ]+ static(MEDIA_URL,document_root=MEDIA_ROOT)

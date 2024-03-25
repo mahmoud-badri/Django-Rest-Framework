@@ -1,8 +1,10 @@
 from django.db import models
 from users.models import User
+from hotel.models import Hotel
 # Create your models here.
 class Appointment(models.Model):
-    hotel = models.ForeignKey(User, on_delete=models.CASCADE)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE,default = None )
+    user = models.ForeignKey(User, on_delete=models.CASCADE , default = None)
     date = models.DateTimeField(auto_now_add=True)
     start_day = models.DateField(default='2024-01-01')
     end_day = models.DateField(default='2024-01-05')
@@ -12,4 +14,5 @@ class Appointment(models.Model):
     pets = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Appointment at {self.hotel} on {self.date}"
+        return f"Appointment from {self.user} at {self.hotel} on {self.date}"
+
