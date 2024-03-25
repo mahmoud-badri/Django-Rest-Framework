@@ -57,6 +57,12 @@ class BookList(generics.ListAPIView):
     queryset=Booking.objects.all()
     serializer_class=BookingSerializer
 
+@api_view(['Get'])
+def BookingBasedHotel(request,hotel_id):
+    booking = Hotel.objects.filter(hotel = hotel_id )
+    booking_ser = BookingSerializer(booking,many=True)
+    return Response({booking_ser.data})
+
 # class BookingListCreateView(generics.ListCreateAPIView):
 #     """
 #     API endpoint for listing and creating bookings.
@@ -95,7 +101,7 @@ class BookList(generics.ListAPIView):
 #     hotel_ser = HotelSerializer(all_hotels,many=True)
 #     return Response({"hotels":hotel_ser.data})
 class HotelList(generics.ListAPIView):
-    queryset=Hotel.objects.all()
+    queryset=Hotel.objects.filter(status="Verified")
     serializer_class=HotelSerializer
 
 

@@ -5,6 +5,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from project import settings
 from .serializers import UserSerializer, ImageSerializer
 from .models import User,image
+
+from .serializers import UserSerializer
+from .models import User
 import jwt, datetime
 from jwt.exceptions import ExpiredSignatureError, DecodeError
 from rest_framework.exceptions import AuthenticationFailed
@@ -41,6 +44,40 @@ class ActivateAccount(APIView):
         except User.DoesNotExist:
             return HttpResponse({ '<h1 >User not found.</h1>'}, status=status.HTTP_404_NOT_FOUND)
 
+from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
+def register_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        # Check if the email is already taken
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({'message': 'email already exists'}, status=400)
+        
+        # Create a new user
+        user = User.objects.create_user(email=email, password=password)
+        user.save()
+        
+        return JsonResponse({'message': 'Registration successful'})
+
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'message': 'Login successful'})
+        else:
+            return JsonResponse({'message': 'Invalid credentials'}, status=401)
+
+def logout_view(request):
+    logout(request)
+    return JsonResponse({'message': 'Logout successful'})
+
+# Create your views here.
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -125,6 +162,11 @@ class UserView(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+@api_view(['Get'])
+def allUsers(request):
+    all_Users = User.objects.all()
+    User_ser = UserSerializer(all_Users,many=True)
+    return Response(User_ser.data)
 
 class LogoutView(APIView):
     def post(self, request):

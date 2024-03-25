@@ -68,6 +68,3 @@ class User(AbstractUser):
 
 
 
-class image(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    img = models.ImageField(upload_to="hotel", null=False, blank=True)

@@ -47,8 +47,10 @@ class Hotel(models.Model):
     is_Pet = models.BooleanField(default=False)
     is_Accessibiliy = models.BooleanField(default=False)
     is_Parking = models.BooleanField(default=False)
+    
     def __str__(self):
         return self.name
+    
 
 class Booking(models.Model):
     ROOM_CHOICES = (
@@ -66,7 +68,7 @@ class Booking(models.Model):
     room_type = models.CharField(max_length=50, choices=ROOM_CHOICES,default="Single")
     start_date = models.DateField()
     end_date = models.DateField()
-    # total_price = models.FloatField()
+    total_price = models.FloatField(default=1.0)
     guest = models.IntegerField(default=0)
     is_accepted = models.BooleanField(default=False)
     is_paid = models.BooleanField(default=False)
@@ -77,3 +79,6 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.user}'s booking at {self.hotel.name}"
+    
+
+    
