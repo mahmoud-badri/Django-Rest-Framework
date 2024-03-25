@@ -65,10 +65,6 @@ class Booking(models.Model):
         ('Suite', 'Suite'),
         ('Family', 'Family Room'),
     )
-    
-    
-
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # user_email = models.EmailField(_('User Email'), max_length=255)
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)

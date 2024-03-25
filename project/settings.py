@@ -145,7 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 # <<<<<<< HEAD
-# BASE_URL = 'http://localhost:8000/'
+BASE_URL = 'http://localhost:8000/'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = "smtp.gmail.com"
 # EMAIL_PORT = 587
