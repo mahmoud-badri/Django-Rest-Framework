@@ -165,8 +165,14 @@ def booking_by_hotel_owner(request, id):
 @api_view(['POST'])
 def confirm_booking(request, id):
     booking = Booking.objects.get(id=id)
+    payment_url = payment_key_request(booking.user, booking.hotel.get_amount())
     booking.is_accepted = True
     booking.save()
+    subject = 'Complete Your Hotel Reservation Payment'
+    message = f'Please complete your payment by clicking the link below:\n\n{payment_url}'
+    recipient_email = booking.user.email  # Change to the user's email
+    
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient_email])
     return Response('Booking confirmed successfully')
 
 @api_view(['POST'])
@@ -174,11 +180,11 @@ def reject_booking(request, id):
     booking = Booking.objects.get(id=id)
     booking.is_accepted = False
     booking.save()
-    booking = get_object_or_404(Booking, id=id)
+    # booking = get_object_or_404(Booking, id=id)
     payment_url = payment_key_request(booking.user, booking.hotel.get_amount())
-    booking.is_accepted = True
-    booking.save()
-    subject = 'Complete Your Hotel Reservation Payment'
+    # booking.is_accepted = True
+    # booking.save()
+    subject = ''
     message = f'Please complete your payment by clicking the link below:\n\n{payment_url}'
     recipient_email = booking.user.email  # Change to the user's email
     
