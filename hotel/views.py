@@ -126,13 +126,18 @@ def HotelAdd(request):
     return Response({"hotels":hotel_ser.data})
 
 
-@api_view(['POST'])
-def HotelEdit(request,hotel_id):
-    hotels = Hotel.objects.get(id = hotel_id )
-    hotel_ser = HotelSerializer(data=request.data,instance=hotels)
-    if hotel_ser.is_valid():
-        hotel_ser.save()
-        return redirect('HotelList')
+# @api_view(['PUT'])
+# def HotelEdit(request,hotel_id):
+#     hotels = Hotel.objects.get(id = hotel_id )
+#     hotel_ser = HotelSerializer(data=request.data,instance=hotels)
+#     if hotel_ser.is_valid():
+#         hotel_ser.save()
+#         return redirect('HotelList')
+# PAtch method
+class HotelEdit(generics.UpdateAPIView):
+    queryset=Hotel.objects.all()
+    serializer_class=HotelSerializer
+    lookup_field='id'
 
 @api_view(['DELETE'])
 def HotelDelete(request,hotel_id):
@@ -149,6 +154,13 @@ def booking_customer(request):
             booking_ser.save()
             return Response(booking_ser.data)
         return Response(booking_ser.errors)
+@api_view(['GET'])
+def hotelOwner(request, id):
+    hotel = Hotel.objects.get(id=id)
+    hotel_ser = HotelSerializer(hotel,many=False)
+    return Response(hotel_ser.data)
+
+
     
 @api_view(['GET'])
 def booking_by_hotel_owner(request, id):
@@ -167,6 +179,8 @@ def confirm_booking(request, id):
     booking = Booking.objects.get(id=id)
     payment_url = payment_key_request(booking.user, booking.hotel.get_amount())
     booking.is_accepted = True
+    booking.user.is_booking=True
+    booking.status= "confirmed"
     booking.save()
     subject = 'Complete Your Hotel Reservation Payment'
     message = f'Please complete your payment by clicking the link below:\n\n{payment_url}'
@@ -179,6 +193,7 @@ def confirm_booking(request, id):
 def reject_booking(request, id):
     booking = Booking.objects.get(id=id)
     booking.is_accepted = False
+    booking.status= "rejected"
     booking.save()
     # booking = get_object_or_404(Booking, id=id)
     payment_url = payment_key_request(booking.user, booking.hotel.get_amount())
@@ -196,6 +211,7 @@ def reject_booking(request, id):
 def reject_booking(request, id):
     booking = get_object_or_404(Booking, id=id)
     booking.is_accepted = False
+    booking.status= "rejected"
     booking.save()
     subject = 'Information About Your Hotel Reservation'
     message = 'Your hotel reservation has been rejected please try to reserve another hotel'
