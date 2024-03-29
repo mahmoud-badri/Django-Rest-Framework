@@ -7,6 +7,9 @@ urlpatterns = [
     path('add/',HotelAdd,name='HotelAdd'),
     path('<hotel_id>/',HotelDetail,name='HotelDetail'),
     path('delete/<hotel_id>',HotelDelete,name='HotelDelete'),
+    path('byOwner/<id>',hotelOwner,name='hotelOwner'),
+    path('edit_by_owner/<int:id>',HotelEdit.as_view(),name='HotelEdit'),
+
     # path('', HotelListCreateView.as_view(), name='hotel-list-create'),
     # path('<int:pk>/', HotelRetrieveUpdateDestroyView.as_view(), name='hotel-retrieve-update-destroy'),
     path('bookingList', BookList.as_view(), name='HotelList'),

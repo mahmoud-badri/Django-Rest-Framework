@@ -53,7 +53,7 @@ class User(AbstractUser):
 
     groups = models.ManyToManyField('auth.Group', related_name='custom_user_groups')
     user_permissions = models.ManyToManyField('auth.Permission', related_name='custom_user_permissions')
-
+    
     def clean(self):
         super().clean()  # Call parent clean method to perform standard validation
         if not self.name:
