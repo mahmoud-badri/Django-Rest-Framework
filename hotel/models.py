@@ -47,7 +47,7 @@ class Hotel(models.Model):
     is_Pet = models.BooleanField(default=False)
     is_Accessibiliy = models.BooleanField(default=False)
     is_Parking = models.BooleanField(default=False)
-    map_location = models.CharField(max_length=500,null=True)
+    # map_location = models.CharField(max_length=500,null=True)
     # def __str__(self):
     #     return self.id
 
