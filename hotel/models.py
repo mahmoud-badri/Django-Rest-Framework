@@ -47,9 +47,9 @@ class Hotel(models.Model):
     is_Pet = models.BooleanField(default=False)
     is_Accessibiliy = models.BooleanField(default=False)
     is_Parking = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
+    # map_location = models.CharField(max_length=500,null=True)
+    # def __str__(self):
+    #     return self.id
 
     def get_amount(self):
         if self.single_room:
@@ -65,6 +65,11 @@ class Booking(models.Model):
         ('Suite', 'Suite'),
         ('Family', 'Family Room'),
     )
+    STATUS_CHOICES = (
+        ('pending', 'pending'),
+        ('rejected', 'rejected'),
+        ('confirmed', 'confirmed'),
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # user_email = models.EmailField(_('User Email'), max_length=255)
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
@@ -76,7 +81,7 @@ class Booking(models.Model):
     guest = models.IntegerField(default=0)
     is_accepted = models.BooleanField(default=False)
     is_paid = models.BooleanField(default=False)
-
+    status= models.CharField(max_length=50, choices=STATUS_CHOICES, default="pending")
     def clean(self):
         if self.start_date >= self.end_date:
             raise ValidationError(_('End date should be greater than start date.'))
