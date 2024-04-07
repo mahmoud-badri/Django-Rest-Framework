@@ -1,7 +1,7 @@
 # Hotel Management System API
 
 ## Description
-Hotel Management System API is designed to support a [React.js frontend project](git@github.com:mahmoud-badri/Hotel-Booking.git) for managing hotel operations. It is built using Django Rest Framework and provides endpoints for various functionalities required in a hotel management system.
+Hotel Management System API is designed to support a [React.js frontend project](https://github.com/mahmoud-badri/Hotel-Booking) for managing hotel operations. It is built using Django Rest Framework and provides endpoints for various functionalities required in a hotel management system.
 
 
 # Features
